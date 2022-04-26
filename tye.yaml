@@ -1,0 +1,32 @@
+name: HHM
+extensions:
+  
+  # Configuration for dapr goes here.
+  -   name: dapr
+      log-level: debug
+      
+
+# Services to run go here.
+services:
+  
+  # The name will be used as the app-id. For a .NET project, Tye only needs the path to the project file.
+  -   name: frontend
+      dockerFile: ClientApp/Dockerfile
+      dockerFileContext: .
+      bindings:
+        - containerPort: 80
+          protocol: http
+          
+  -   name: backend
+      dockerFile: BackendApi/Dockerfile
+      dockerFileContext: .
+      bindings:
+        - containerPort: 80
+          protocol: http
+
+ingress:
+  - name: weather-service
+    bindings:
+      - port: 5000
+    rules:
+      - service: frontend
